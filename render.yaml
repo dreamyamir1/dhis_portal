@@ -1,7 +1,7 @@
 services:
   - type: web
     name: dhis-phish
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
-    healthCheckPath: /
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app.py"
+    healthCheckPath: "/"
