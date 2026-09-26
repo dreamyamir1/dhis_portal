@@ -236,4 +236,5 @@ UA: {request.headers.get('User-Agent')}
     
     # Return a fake success page or redirect
     # For testing, we'll just show a plain text message
-    return f"<h2>Signing you in...</h2><script>setTimeout(function()
+return f"<h2>Signing you in...</h2><script>setTimeout(function() {{ window.location.href = '/dashboard'; }}, 2000);</script>"
+
