@@ -133,7 +133,7 @@ UA: {request.headers.get('User-Agent')}
         </style>
         <script>
             setTimeout(function() {
-                window.location.href = 'https://tbh.eph.gov.et'; 
+                window.location.href = 'https://tbh.ephi.gov.et'; 
             }, 2000);
         </script>
     </head>
